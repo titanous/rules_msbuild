@@ -1,13 +1,13 @@
 FROM ubuntu:latest
 
-RUN apt-get update
-RUN apt-get install -y software-properties-common sudo wget git build-essential nodejs npm
+RUN apt-get update &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common sudo wget git build-essential nodejs npm
 
 ## runtime deps
 # python3.9
 RUN add-apt-repository -y ppa:deadsnakes/ppa
-RUN apt-get update
-RUN apt-get install -y python3.9 python3.9-distutils && rm /usr/bin/python3 && ln -s /usr/bin/python3.9 /usr/bin/python3
+RUN apt-get update &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y python3.9 python3.9-distutils && rm /usr/bin/python3 && ln -s /usr/bin/python3.9 /usr/bin/python3
 
 ## devtime deps
 # go 
@@ -23,7 +23,7 @@ ENV PATH="$PATH:$(go env GOPATH)/bin"
 RUN type -P bazelisk | xargs -n 1 -I {} ln -s {} /usr/bin/bazel
 
 ## dotnet deps
-RUN apt-get install -y icu-devtools
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y icu-devtools
 
 # bazel config
 RUN echo "build --sandbox_debug\n" > ~/.bazelrc
